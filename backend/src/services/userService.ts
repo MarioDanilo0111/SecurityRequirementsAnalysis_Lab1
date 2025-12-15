@@ -1,29 +1,45 @@
 import { User } from "../types/user.js";
 
-let users: User[] = [];
+let users: User[] = [
+  { id: 1, name: "Alice", email: "alice@example.com", role: "user" },
+  { id: 2, name: "Bob", email: "bob@example.com", role: "admin" },
+];
+
 /* Get Users */
-export function getUsers() {
+export function getUsers(): User[] {
   return users;
 }
+
 /* Add User */
-export function addUser(name: string, email: string): User {
-  if (!users) {
-    return;
-  }
-  const generateNewUser: User = {
+export function addUser(name: string, email: string, role: string): User {
+  const newUser: User = {
     id: users.length + 1,
     name,
     email,
+    role,
   };
-  users.push(generateNewUser);
-  return generateNewUser;
+  users.push(newUser);
+  return newUser;
 }
+
 /* Delete User */
-export function deleteUser(id: number): User | false {
-  if (!users || users.length === 0) return false;
+export function deleteUser(id: number): boolean {
   const index = users.findIndex((u) => u.id === id);
   if (index === -1) return false;
 
-  const [deletedUser] = users.splice(index, 1);
-  return deletedUser;
+  users.splice(index, 1);
+  return true;
+}
+
+/* Update User (PUT = replace, PATCH = partial update) */
+export function updateUser(id: number, data: Partial<User>): User | null {
+  const index = users.findIndex((u) => u.id === id);
+  if (index === -1) return null;
+
+  // Prevent ID overrider in PATCH
+  const { id: _ignore, ...safeData } = data;
+
+  users[index] = { ...users[index], ...safeData };
+
+  return users[index];
 }
