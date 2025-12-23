@@ -7,11 +7,12 @@ export function getUsers(): User[] {
   return users;
 }
 
-export function addUser(name: string, email: string): User {
+export function addUser(name: string, email: string, role: string): User {
   const newUser: User = {
     id: Date.now(),
     name,
     email,
+    role,
   };
   users.push(newUser);
 
