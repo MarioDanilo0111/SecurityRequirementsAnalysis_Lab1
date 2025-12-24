@@ -23,12 +23,12 @@ export function addUser(name: string, email: string, role: string): User {
 }
 
 /* Delete User */
-export function deleteUser(id: number): boolean {
+export function deleteUser(id: number): User | false {
   const index = users.findIndex((u) => u.id === id);
   if (index === -1) return false;
 
-  users.splice(index, 1);
-  return true;
+  const [deletedUser] = users.splice(index, 1);
+  return deletedUser;
 }
 
 /* Update User (PUT = replace, PATCH = partial update) */
