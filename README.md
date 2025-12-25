@@ -211,7 +211,7 @@ Requirements Checklist
 | GET/POST/PUT/DELETE API  | ✔ (PUT pending if required) |
 | Frontend uses API        | ⬜ Work in progress         |
 | 3 CRUD operations via UI | ⬜ Pending                  |
-| Backend unit tests       | ⬜ Pending                  |
+| Backend unit tests       | ✓ Done                      |
 | API tests                | ⬜ Pending                  |
 | Frontend E2E tests       | ⬜ Pending                  |
 | CI/CD pipeline           | ⬜ Pending                  |
