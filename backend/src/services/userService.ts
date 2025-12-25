@@ -10,7 +10,7 @@ export function getUsers(): User[] {
   return users;
 }
 
-/* Add User */
+/* Add User, POST*/
 export function addUser(name: string, email: string, role: string): User {
   const newUser: User = {
     id: users.length + 1,
