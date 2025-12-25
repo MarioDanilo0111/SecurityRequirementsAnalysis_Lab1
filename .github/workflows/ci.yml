@@ -1,39 +1,41 @@
-name: CI
+name: Backend CI
 
 on:
   push:
-    branches:
-      - dev
+    branches: ["dev"]
   pull_request:
-    branches:
-      - main
+    branches: [" main"]
 
 jobs:
-  build-and-test:
+  backend-test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ---------- Backend ----------
-      - name: Set up Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
 
-      - name: Install backend dependencies
-        working-directory: backend
-        run: npm install --legacy-peer-deps
+      - name: Install backend deps
+        run: npm install --prefix backend
 
-      - name: Run backend unit tests (Vitest)
-        working-directory: backend
-        run: npm run test
+      - name: Build backend
+        run: npm run build --prefix backend
 
-      # ---------- API TESTS ----------
-      - name: Install Newman (API testing)
-        working-directory: backend
-        run: npm install -D newman --legacy-peer-deps
+      - name: Start backend server
+        run: npm start --prefix backend &
 
-      - name: Run API tests with Newman
-        working-directory: backend
-        run: npx newman run postman/user-api.collection.json
+      - name: Wait for backend to be ready
+        run: sleep 3
+
+      - name: Run Vitest Unit Tests
+        run: npm test --prefix backend
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run API Tests
+        run: newman run ./backend/postman/user-api.collection.json

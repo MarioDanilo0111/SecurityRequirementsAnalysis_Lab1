@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "ES2020",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "dist",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "verbatimModuleSyntax": false,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "strict": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist"]
 }

@@ -1,11 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "type": "module",
+  
   "scripts": {
-    "dev": "node --loader ts-node/esm src/server.ts",
-    "test": "vitest run",
-    "test:ui": "vitest"
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "vitest run"
   },
   "dependencies": {
     "cors": "^2.8.5",

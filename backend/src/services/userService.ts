@@ -1,4 +1,4 @@
-import { User } from "../types/user.js";
+import { User } from "../types/user";
 
 let users: User[] = [
   { id: 1, name: "Alice", email: "alice@example.com", role: "user" },
