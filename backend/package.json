@@ -15,6 +15,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^4.x",
     "@types/node": "^18.x",
+    "newman": "^6.2.1",
     "ts-node": "^10.x",
     "typescript": "^5.x",
     "vitest": "^4.0.16"
