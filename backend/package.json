@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  
   "scripts": {
     "dev": "ts-node src/server.ts",
     "build": "tsc",
@@ -15,7 +14,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^4.x",
-    "@types/node": "^18.x",
+    "@types/node": "^20.19.27",
     "newman": "^6.2.1",
     "ts-node": "^10.x",
     "typescript": "^5.x",
