@@ -9,19 +9,31 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      # ---------- Backend ----------
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Install dependencies
-        run: npm install --prefix frontend
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install --legacy-peer-deps
 
-      - name: Build frontend
-        run: npm run build --prefix frontend
+      - name: Run backend unit tests (Vitest)
+        working-directory: backend
+        run: npm run test
+
+      # ---------- API TESTS ----------
+      - name: Install Newman (API testing)
+        working-directory: backend
+        run: npm install -D newman --legacy-peer-deps
+
+      - name: Run API tests with Newman
+        working-directory: backend
+        run: npx newman run postman/user-api.collection.json
