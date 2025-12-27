@@ -21,10 +21,10 @@ The goal is to meet the grading requirements for a DevSecOps assignment by build
 ## Project Structure
 
 ```yaml
-├──.github
-│   ├──workflows
-│       ├── ci.yml
-│       └── frontend.yml
+├── .github
+│    └── workflows
+│         ├── ci.yml
+│         └── frontend.yml
 ├── backend
 │   ├── package-lock.json
 │   ├── package.json

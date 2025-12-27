@@ -10,7 +10,6 @@ export async function fetchUsers() {
 
     return await res.json();
   } catch (err) {
-    // ✔ Required for Playwright Test #5
     const msg = document.querySelector("#error-message");
     if (msg instanceof HTMLElement) {
       msg.textContent = "Backend error — could not load users.";
@@ -18,7 +17,7 @@ export async function fetchUsers() {
     }
 
     console.error("Fetch users failed:", err);
-    return []; // FE still works with empty list
+    return [];
   }
 }
 
