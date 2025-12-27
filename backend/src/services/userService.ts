@@ -1,6 +1,6 @@
 import { User } from "../types/user";
 
-let users: User[] = [
+const users: User[] = [
   { id: 1, name: "Alice", email: "alice@example.com", role: "user" },
   { id: 2, name: "Bob", email: "bob@example.com", role: "admin" },
 ];
@@ -37,7 +37,7 @@ export function updateUser(id: number, data: Partial<User>): User | null {
   if (index === -1) return null;
 
   // Prevent ID overrider in PATCH
-  const { id: _ignore, ...safeData } = data;
+  const { id: _, ...safeData } = data;
 
   users[index] = { ...users[index], ...safeData };
 

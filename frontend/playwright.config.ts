@@ -1,7 +1,5 @@
 import { defineConfig } from "@playwright/test";
 
-declare const process: any;
-
 export default defineConfig({
   testDir: "./tests-e2e",
   timeout: 30000,

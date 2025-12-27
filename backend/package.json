@@ -5,19 +5,25 @@
     "dev": "ts-node src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "eslint ."
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.x"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.x",
     "@types/node": "^20.19.27",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
     "newman": "^6.2.1",
     "ts-node": "^10.x",
     "typescript": "^5.x",
+    "typescript-eslint": "^8.50.1",
     "vitest": "^4.0.16"
   }
 }

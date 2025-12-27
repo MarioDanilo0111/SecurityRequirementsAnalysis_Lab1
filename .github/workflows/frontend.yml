@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  buld:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,3 +21,9 @@ jobs:
 
       - name: Build frontend
         run: npm run build --prefix frontend
+
+      - name: Lint frontend
+        run: npm run lint --prefix frontend
+
+      - name: Run E2E tests
+        run: npm run test:e2e --prefix frontend

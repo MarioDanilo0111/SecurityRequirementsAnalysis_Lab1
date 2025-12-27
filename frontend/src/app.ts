@@ -75,7 +75,7 @@ export function setupFormEvent() {
       /* Update the UI */
       await renderList();
     } catch (err) {
-      // console.error("Failed to create user: ", err);
+      console.error("Failed to create user: ", err);
       const errorBox = document.querySelector("#error-message") as HTMLElement;
       errorBox.textContent = "Backend is unavailable";
       errorBox.style.display = "block";
