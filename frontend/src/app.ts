@@ -1,22 +1,18 @@
-// import { addUser } from "./api/userService";
-import {
-  fetchUsers,
-  deleteUserById,
-  createUser,
-  // renderList,
-} from "./services/api";
+import { fetchUsers, deleteUserById, createUser } from "./services/api";
 import type { User } from "./types/userTypes.js";
-// import {renderList} from "./renderList"
 
-export function startApp() {
+export async function startApp() {
   document.querySelector("#app")!.innerHTML = `
   <h1>Simple CRUD App</h1>
+  <div id="error-message" style="color:red; display:none;"></div>
   <div id="form-section"></div>
   <ul id="user-list"></ul>
   `;
   renderForm();
   setupFormEvent();
-  renderList();
+
+  // async to await the render list so that the tests can pass
+  await renderList();
 }
 
 export function renderForm() {
@@ -29,10 +25,16 @@ export function renderForm() {
 
   formSection.innerHTML = `
   <form id="user-form">
-  <input type="text" id="name-input" placeholder="Name" />
-  <input type="email" id="email-input" placeholder="Email" />   
-  <input type="role" id="role-input" placeholder="role" />   
-  <button type="submit" id="">add</button>   
+
+    <input type="text" id="name-input" placeholder="Name" />
+    <input type="email" id="email-input" placeholder="Email" />   
+
+    <select id="role-input">
+      <option value="user">user</option>
+      <option value="admin">admin</option>
+    </select>
+
+    <button type="submit" id="submit-btn">add</button>   
   </form>
   `;
 }
@@ -71,21 +73,19 @@ export function setupFormEvent() {
       );
       formSection.reset();
       /* Update the UI */
-      //addUser(name, email);
       await renderList();
-      // setupDeleteEvents();
     } catch (err) {
-      console.error("Failed to create user: ", err);
+      // console.error("Failed to create user: ", err);
+      const errorBox = document.querySelector("#error-message") as HTMLElement;
+      errorBox.textContent = "Backend is unavailable";
+      errorBox.style.display = "block";
       alert("Could not create user. Check console.");
     }
   });
 }
 export async function renderList() {
   const usersEl = document.querySelector<HTMLUListElement>("#user-list");
-  if (!usersEl) {
-    console.warn("could not load Users: ");
-    return;
-  }
+  if (!usersEl) return;
 
   // Clean old items
   usersEl.innerHTML = "";
@@ -94,12 +94,13 @@ export async function renderList() {
 
   users.forEach((u) => {
     const li = document.createElement("li");
+    li.dataset.id = String(u.id);
     li.textContent = `${u.name} <${u.email}> (${u.role})`;
 
     const btn = document.createElement("button");
     btn.textContent = "Delete";
     btn.dataset.id = String(u.id);
-    console.log(btn);
+    // console.log(btn);
 
     li.appendChild(btn);
     usersEl.appendChild(li);
@@ -109,7 +110,6 @@ export async function renderList() {
 
 export function setupDeleteEvents() {
   const btns = document.querySelectorAll<HTMLButtonElement>("button[data-id]");
-  // console.log(btns);
 
   if (btns.length === 0) {
     console.warn("No Button");
