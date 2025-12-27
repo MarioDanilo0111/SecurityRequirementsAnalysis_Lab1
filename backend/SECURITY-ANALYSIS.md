@@ -1,163 +1,213 @@
-# SECURITY-ANALYSIS.md
+# SECURITY ANALYSIS for User CRUD API
 
-Säkerhetsanalys för User CRUD API (Node.js + Express + TypeScript)
-
-## 📌 Översikt
-
-Denna säkerhetsanalys beskriver de mest relevanta säkerhetshoten för applikationen “User CRUD API”.  
-Applikationen består av ett REST API (GET, POST, DELETE), en enklare frontend, samt in-memory datalagring.  
-Analysen utgår från OWASP Top 10.
+Node.js + Express + TypeScript
 
 ---
 
-## ⚠️ Identifierade hotbilder
+## Overview
+
+This document provides a security analysis of the User CRUD API, a simple REST-based application that includes:
+
+- A backend (Node.js + Express + TypeScript)
+- A frontend client consuming the API
+- In-memory data storage
+- Full CRUD operations for user management
+
+The analysis is based on the OWASP Top 10 and identifies likely risks, attack vectors, consequences, and recommended mitigations.
+
+---
+
+## Identified Threats and Vulnerabilities
+
+---
 
 ### 1. Injection Attacks
 
-**Risknivå:** Hög  
-**Beskrivning:**  
-Applikationen accepterar användarinmatning utan validering i POST /users. Detta innebär risk för:
+**Risk Level:** High
+
+**Description**  
+The API accepts user input without any validation or sanitization, especially in POST /users.
+This leaves the system open to:
 
 - JSON injection
 - Prototype pollution
-- Skadliga textsträngar (t.ex. `<script>alert(1)</script>`)
+- Script injection `<script>alert(1)</script>`
 
-**Konsekvens:**
+**Consequences**
 
-- Manipulation av API-data
-- Oväntade krascher (DoS)
+- Unexpected application behavior or crashes (DoS)
+- Corrupted in-memory data
+- Potential execution of malicious payloads inside UI
 
-**Åtgärder:**
+**Recommended Mitigations**
 
-- Inputvalidering/sanering
-- Införa JSON-schema för POST-body
+- Add input validation / sanitization
+- Implement JSON schemas for request bodies
+- Reject invalid characters or dangerous payloads
 
 ---
 
 ### 2. Broken Access Control
 
-**Risknivå:** Hög  
-**Beskrivning:**  
-API:et saknar åtkomstkontroller. Vem som helst kan:
+**Risk Level:** High  
+**Description**  
+The API has no authentication or authorization. Anyone can:
 
-- skapa användare (POST)
-- radera användare (DELETE)
-- läsa alla användare (GET)
+- Create users (POST)
+- Delete users (DELETE)
+- Read all users (GET)
 
-**Konsekvens:**
+**Consequences**
 
-- Obehöriga ändringar
-- Dataförlust och sabotage
+- Unauthorized data modification
+- Deletion of critical data
+- Complete loss of integrity
 
-**Åtgärder:**
+**Recommended Mitigations**
 
-- Införa behörighetskontroll (auth)
-- Begränsa DELETE till administratörer
+- Implement authentication (JWT or session-based)
+- Restrict DELETE/PUT to authorized roles (e.g., admin users)
+- Validate user permissions on every request
 
 ---
 
 ### 3. Sensitive Data Exposure
 
-**Risknivå:** Medel  
-**Beskrivning:**  
-API:et returnerar namn och e-post öppet via GET /users.
+**Risk Level:** Medel  
+**Dscription**  
+The API returns personally identifiable information (PII), including:
 
-**Konsekvens:**
+- Full name
+- Email address
 
-- Personuppgiftsläckage
-- GDPR-relaterade risker
+No masking or access restrictions exist.
 
-**Åtgärder:**
+**Consequences**
 
-- Maskera e-post i UI
-- Kräva autentisering för GET
+- GDPR violations
+- Email harvesting
+- Attackers collecting user identity data
+
+**Recommended Mitigations**
+
+- Mask or truncate sensitive data in frontend
+- Require authentication for GET /users
+- Store as little PII as possible
 
 ---
 
 ### 4. Security Misconfiguration
 
-**Risknivå:** Hög  
-**Beskrivning:**  
-Servern saknar följande skydd:
+**Risk Level:** High
+**Description**  
+The server is missing essential security protections, such as:
 
 - Rate limiting
-- CORS-begränsningar
-- HTTP-säkerhetsheaders
-- Centralt felhanteringslager
+- Secure CORS configuration
+- HTTP security headers
+- Proper error-handling middleware
 
-**Konsekvens:**
+**Consequences**
 
-- DoS-attacker
-- Informationsläckage
+- Vulnerability to brute-force or DoS attacks
+- Increased exposure of internal server details
+- Accidental data leakage
 
-**Åtgärder:**
+**Recommended Mitigations**
 
-- Använd `helmet`, `cors`, `express-rate-limit`
-- Inför en global error-handler
-
----
-
-### 5. Avsaknad av Inputvalidering
-
-**Risknivå:** Hög  
-**Beskrivning:**  
-POST/DELETE endpoints kontrollerar inte datatyper eller format.
-
-**Konsekvens:**
-
-- Felaktig data
-- Ökad attackyta
-
-**Åtgärder:**
-
-- Validera name/email
-- 400-response vid fel format
+- Add middleware such as:
+  - helmet
+  - cors (restricted origin)
+  - express-rate-limit
+- Implement a centralized error handler
+- Disable detailed error messages in production
 
 ---
 
-### 6. Brist på loggning och övervakning
+### 5. Missing Input Validation
 
-**Risknivå:** Medel  
-**Beskrivning:**  
-Raderingar loggas inte strukturerat. Misstänkt aktivitet kan inte spåras.
+**Risk Level:** High
 
-**Konsekvens:**
+**Description**  
+The API does not validate:
 
-- Svårt att upptäcka attacker
-- Ingen revisionsspårning
+- Name type/length
+- Email format
+- Role values
+- User IDs provided to DELETE/PUT
 
-**Åtgärder:**
+**Consequences**
 
-- Införa audit-logging
-- Logga DELETE-operatoner
+- Server crashes from unexpected types
+- Injection opportunities
+- Invalid or corrupted data
 
----
+**Recommended Mititgations**
 
-## 🧪 Sammanfattning av risknivåer
-
-| Hotbild                   | Risknivå | Kommentar                                |
-| ------------------------- | -------- | ---------------------------------------- |
-| Injection                 | Hög      | Ingen validering av POST-body            |
-| Broken Access Control     | Hög      | API helt öppet                           |
-| Sensitive Data Exposure   | Medel    | E-post exponeras                         |
-| Security Misconfiguration | Hög      | Saknar grundläggande säkerhetsmiddleware |
-| Missing Input Validation  | Hög      | Kan krascha servern                      |
-| Lack of Logging           | Medel    | Ingen spårbarhet                         |
+- Validate all POST/PUT/DELETE inputs
+- Use libraries such as Zod, Joi, or Yup
+- Return 400 Bad Request for invalid payloads
 
 ---
 
-## 🛡 Rekommenderade åtgärder
+### 6. Lack of Logging and Monitoring
 
-- Lägg in valideringssteg för POST/DELETE
-- Inför autentisering
-- Lägg till Helmet + CORS + Rate limiting
-- Strukturerad loggning av kritiska händelser
-- Testa endpoints med säkerhetsverktyg (t.ex. OWASP ZAP)
+**Risk Level:** Medium
+
+**Description**  
+The application logs general messages but lacks structured auditing. Key operations—especially DELETE—are not logged securely.
+
+**Consequences**
+
+- No traceability for malicious activity
+- Hard to investigate incidents
+- No visibility into suspicious access patterns
+
+**Recommended Migrations**
+
+- Add audit logging for:
+  - User creation
+  - User deletion
+  - Repeated failed requests
+- Use a centralized logging framework (Winston, Pino, etc.)
+- Monitor logs for abnormal patterns
 
 ---
 
-## ✔ Slutsats
+## Summary of Risk Levels
 
-Även om applikationen är enkel och körs lokalt, är samma sårbarheter relevanta som för riktiga webbtjänster.  
-De mest kritiska riskerna är brist på inputvalidering och avsaknad av åtkomstkontroll.  
-Genom föreslagna mitigation-åtgärder kan API:t uppnå en grundläggande säkerhetsnivå.
+| Threat Category           | Risk Level | Notes                             |
+| ------------------------- | ---------- | --------------------------------- |
+| Injection                 | High       | No input validation               |
+| Broken Access Control     | High       | API is fully open                 |
+| Sensitive Data Exposure   | Medium     | Emails exposed publicly           |
+| Security Misconfiguration | High       | Missing headers, limits, and CORS |
+| Missing Input Validation  | High       | Allows harmful or malformed data  |
+| Lack of Logging           | Medium     | No audit or monitoring            |
+
+---
+
+## Recommended Security Improvements
+
+1.  Implement strict input validation for all endpoints
+2.  Add authentication & authorization
+3.  Use secure middleware:
+    - Helmet
+    - Rate limiting
+    - Restrictive CORS
+4.  Add centralized error handling for safe responses
+5.  Introduce structured audit logging
+6.  Conduct automated security scans (e.g., OWASP ZAP)
+
+---
+
+## Conclusion
+
+Even though the application is simple and primarily intended for educational purposes, it demonstrates multiple vulnerabilities common in real-world applications.
+
+The two most critical issues are:
+
+- Lack of input validation
+- Absence of access control
+
+Implementing the recommended mitigations would significantly increase the application's security posture and align it with standard industry practices.

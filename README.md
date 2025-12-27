@@ -21,31 +21,68 @@ The goal is to meet the grading requirements for a DevSecOps assignment by build
 ## Project Structure
 
 ```yaml
+├──.github
+│   ├──workflows
+│       ├── ci.yml
+│       └── frontend.yml
 ├── backend
-│   ├── node_modules
 │   ├── package-lock.json
 │   ├── package.json
+│   ├── postman
 │   ├── SECURITY-ANALYSIS.md
 │   ├── src
+│   ├── test-server.js
+│   ├── tests
 │   └── tsconfig.json
 ├── frontend
 │   ├── index.html
-│   ├── node_modules
 │   ├── package-lock.json
 │   ├── package.json
-│   ├── public
+│   ├── playwright.config.ts
 │   ├── src
+│   ├── tests-e2e
 │   └── tsconfig.json
 ├── LICENSE
-├── README.md
-└── temp.txt
+├── package-lock.json
+├── package.json
+└── README.md
 ```
 
 ---
 
 ## Running the Application
 
-### Backend
+### Recommended: Start both frontend & backend from root
+
+    The root folder includes:
+
+      - .nvmrc → Ensures correct Node version
+      - A dev script → Runs backend + frontend simultaneously
+
+Step 1 — Use correct Node version
+
+```bash
+nvm use
+```
+
+Step 2 — Install dependencies (root + subprojects)
+
+```bash
+npm install
+```
+
+Step 3 — Start everything
+
+```bash
+npm run dev
+```
+
+This launches:
+
+    - Backend: http://localhost:3000
+    - Frontend: http://localhost:5173
+
+### Running Backend only
 
 ```bash
 cd backend
@@ -59,7 +96,7 @@ Backend runs at:
 
 ---
 
-### Frontend
+### Running Frontend only
 
 ```bash
 cd frontend
@@ -82,7 +119,7 @@ Fetch all users.
 Response:
 
 ```js
-[{ id: 1, name: "Alice", email: "alice@example.com" }];
+[{ id: 1, name: "Alice", email: "alice@example.com", role: "user" }];
 ```
 
 # POST /users
@@ -93,9 +130,11 @@ Body:
 
 ```js
 {
-"name": "Maria",
-"email": "maria@example.com"
+  "name": "Maria",
+  "email": "maria@example.com",
+  "role": "admin"
 }
+
 ```
 
 Response:
@@ -103,15 +142,23 @@ Response:
 ```js
 
 {
-"id": 2,
-"name": "Maria",
-"email": "maria@example.com"
+{
+  "id": 2,
+  "name": "Maria",
+  "email": "maria@example.com",
+  "role": "admin"
+}
+
 }
 ```
 
+---
+
 # PUT /users/:id
 
-# Updates an existing user.
+Updates an existing user.
+
+---
 
 # DELETE /users/:id
 
@@ -122,67 +169,79 @@ Responses:
 - `204 No Content` — Successfully deleted
 - `404 Not Found` — User not found
 
+---
+
 ## Testing Strategy
 
 This project includes three categories of tests:
 
-# ✔ Backend Unit Tests
+# Backend Unit Tests
 
 Covers:
 
 - getUsers
 - addUser
 - deleteUser
-- error handling
-- validation scenarios
+- updateUser
+- error & validation paths
 
-# ✔ API Tests
+---
 
-Includes:
-
-- GET returns 200
-- POST returns 201
-- DELETE returns 204
-- 404 for unknown ID
-- invalid input tests
-
-# ✔ Frontend E2E Tests
+# API Tests (Postman + Newman)
 
 Covers:
 
-- App loads
-- List renders users
-- Create user flow
-- Delete user flow
-- Error handling messages
+- GET → 200 OK
+- POST → 201 Created
+- PATCH → 200 Updated
+- DELETE → 204 No Content
+- DELETE non-exixting → 404
 
-Minimum requirement: 5 meaningful tests per category.
+---
+
+# Frontend E2E Tests (Playwright)
+
+Covers:
+
+- App loads with correct heading
+- User list renders
+- Create new user flow
+- Delete user flow
+- Error message show when backend is down
+
+All tests pass.
+
+---
 
 # CI/CD Pipeline
 
-The pipeline will:
+GitHub Actions automatically:
 
-- Trigger on push and pull_request
-- Install backend & frontend dependencies
-- Run all test suites (backend, API & E2E)
-- Block merge into main unless tests pass
-- Uphold branch protection rules
+- Installs BE + FE dependencies
+- Run unit tests
+- Runs API tests
+- Runs E2E tests via Playwright
+- Block merge into `main` unless tests pass
+- Enforces branch protection rules
 
-Example workflow filename:
+Workflow are stored in:
 
 ```bash
 .github/workflows/ci.yml
+.github/workflows/frontend-ci.yml
 
 ```
 
 Pipeline ensures secure, tested code reaches main.
 
+---
+
 ## Security Analysis
 
-A complete security analysis is included in:
+A complete OWASP-aligned analysis is included in:
 
 ```bash
-SECURITY-ANALYSIS.md
+backend/SECURITY-ANALYSIS.md
 
 ```
 
@@ -192,44 +251,39 @@ The analysis includes:
 - Broken Access Control
 - Sensitive Data Exposure
 - Security Misconfiguration
-- Missing Input Validation
+- Input validation gaps
 - Logging/Monitoring weaknesses
+- Mitigation for each risk
 
-Each item includes:
-
-- Description
-- Relevance to the app
-- Consequences
-- Mitigation
-
-Mitigation
+---
 
 Requirements Checklist
 
-| Requirement              | Status                      |
-| ------------------------ | --------------------------- |
-| GET/POST/PUT/DELETE API  | ✔ (PUT pending if required) |
-| Frontend uses API        | ✓ Done                      |
-| 4 CRUD operations via UI | ✓ Done                      |
-| Backend unit tests       | ✓ Done                      |
-| API tests                | ⬜ Pending                  |
-| Frontend E2E tests       | ⬜ Pending                  |
-| CI/CD pipeline           | ⬜ Pending                  |
-| Branch protection rules  | ✓ Done                      |
-| Security analysis        | ✓ Done                      |
-| README                   | ✓ Done                      |
+| Requirement              | Status |
+| ------------------------ | ------ |
+| GET/POST/PUT/DELETE API  | ✔ Done |
+| Frontend uses API        | ✓ Done |
+| 4 CRUD operations via UI | ✓ Done |
+| Backend unit tests       | ✓ Done |
+| API tests                | ✓ Done |
+| Frontend E2E tests       | ✓ Done |
+| CI/CD pipeline           | ✓ Done |
+| Branch protection rules  | ✓ Done |
+| Security analysis        | ✓ Done |
+| README                   | ✓ Done |
+
+---
 
 # How to Clone and Start Project
 
 ```bash
 git clone <repository-url>
 cd SecurityRequirementsAnalysis_Lab1
+nvm use
+npm install
+npm run dev
 ```
 
 Backend & frontend start instructions are listed above.
 
 ---
-
-# License
-
-## MIT License
