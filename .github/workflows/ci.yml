@@ -42,3 +42,6 @@ jobs:
 
       - name: Lint backend
         run: npm run lint --prefix backend
+
+      - name: Security audit
+        run: npm audit --audit-level=high --prefix backend || true

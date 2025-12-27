@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { updateUser, getUsers } from "../src/services/userService.js";
+import { updateUser, getUsers, addUser } from "../src/services/userService.js";
 
 // Reset before each test
 beforeEach(() => {
@@ -38,5 +38,18 @@ describe("updateUsers()", () => {
     expect(updated.role).toBe("super-admin");
     expect(updated.name).toBe(before.name);
     expect(updated.email).toBe(before.email);
+  });
+
+  it("should ignore ID override attempts", () => {
+    const original = addUser("ignoreOverride", "ignore@vitest.com", "user");
+
+    const updated = updateUser(original.id, {
+      id: 999,
+      name: "Hacked Name",
+    });
+
+    expect(updated).not.toBeNull();
+    expect(updated!.id).toBe(original.id);
+    expect(updated!.name).toBe("Hacked Name");
   });
 });

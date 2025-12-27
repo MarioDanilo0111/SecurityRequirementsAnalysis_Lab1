@@ -11,7 +11,7 @@ test("2. Users are loaded and rendered", async ({ page }) => {
   await page.goto("/");
 
   const items = page.locator("#user-list li");
-  const count = await items.count()
+  const count = await items.count();
 
   expect(count).toBeGreaterThan(0);
 });
@@ -34,6 +34,9 @@ test("4. Can delete a user", async ({ page }) => {
 
   const firstDeleteBtn = page.locator("button[data-id]").first();
   const id = await firstDeleteBtn.getAttribute("data-id");
+
+  // handle dialog before click
+  page.once("dialog", (dialog) => dialog.accept());
 
   await firstDeleteBtn.click();
 

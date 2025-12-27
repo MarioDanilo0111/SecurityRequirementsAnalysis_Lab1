@@ -124,6 +124,8 @@ export function setupDeleteEvents() {
         console.error("Invalid id on delete button", b.dataset.id);
         return;
       }
+
+      if (!confirm("Are you sure you want to delete this user?")) return;
       try {
         await deleteUserById(btnsId);
         console.log(`Deleted user with id ${btnsId}`);

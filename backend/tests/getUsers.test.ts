@@ -14,4 +14,18 @@ describe("getUsers()", () => {
     expect(users[0]).toHaveProperty("email");
     expect(users[0]).toHaveProperty("role");
   });
+
+  it("Should return a copy of the users array", () => {
+    const users1 = getUsers();
+    const users2 = getUsers();
+
+    users1.push({
+      id: 999,
+      name: "Anne",
+      email: "anny@vitest.com",
+      role: "user",
+    });
+
+    expect(users2.length).not.toBe(users1.length);
+  });
 });

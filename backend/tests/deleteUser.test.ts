@@ -37,4 +37,10 @@ describe("deleteUser()", () => {
 
     expect(after).toBe(before - 1);
   });
+
+  it("should return false for invalid numeric ID's", () => {
+    expect(deleteUser(-1)).toBe(false);
+    expect(deleteUser(0)).toBe(false);
+    expect(deleteUser(NaN)).toBe(false);
+  });
 });

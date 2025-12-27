@@ -40,4 +40,12 @@ describe("addUser()", () => {
 
     expect(after).toBe(before + 1);
   });
+
+  it("should reject invalid email", () => {
+    expect(() => addUser("Danilo", "not-an-email", "user")).toThrow();
+  });
+
+  it("should reject empty name", () => {
+    expect(() => addUser("", "noName@vitest.com", "user")).toThrow();
+  });
 });
