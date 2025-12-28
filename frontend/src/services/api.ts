@@ -28,9 +28,16 @@ export async function createUser(name: string, email: string, role: string) {
     body: JSON.stringify({ name, email, role }),
   });
   if (!res.ok) {
-    throw new Error("Failed to create user");
+    throw new Error(`Failed to create user (${res.status})`);
   }
-  return await res.json();
+  const data = await res.json();
+
+  if (!data.id) {
+    console.error("Invalid POST response: ", data);
+    throw new Error("Backend did not return an id");
+  }
+
+  return data;
 }
 
 export async function deleteUserById(id: number) {

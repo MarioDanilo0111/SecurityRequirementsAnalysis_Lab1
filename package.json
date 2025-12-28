@@ -1,18 +1,20 @@
 {
-  "devDependencies": {
-    "concurrently": "^9.2.1"
-  },
   "name": "securityrequirementsanalysis_lab1-root",
   "private": true,
   "version": "1.0.0",
   "description": "Root workspace for running frontend + backend concurrently.",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
   "scripts": {
     "predev": "npm run kill-ports",
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
-    "check-node": "node -e \"const v = process.versions.node.split('.').map(Number); if (v[0] < 20 || (v[0] === 20 && v[1] < 19)) { console.error('Node 20.19+ required'); process.exit(1); }\"",
-    "postinstall": "npm run check-node",
-    "kill-ports": "bash -c 'kill -9 $(lsof -t -i:3000) 2>/dev/null || true'",
-    "lint": "eslint ."
+    "kill-ports": "lsof -ti:3000 -ti:5173 | xargs -r kill -9 2>/dev/null || true",
+    "lint": "eslint backend/src frontend/src --ext .ts,.js"
   },
   "engines": {
     "node": ">=20.19.0"

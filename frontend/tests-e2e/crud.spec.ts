@@ -25,23 +25,22 @@ test("3. Can create a new user", async ({ page }) => {
 
   await page.click("#submit-btn");
 
-  const newUser = page.locator("#user-list li", { hasText: "TestUser" });
-  await expect(newUser).toBeVisible();
+  await page.waitForSelector(`#user-list li:has-text("TestUser")`);
 });
 
 test("4. Can delete a user", async ({ page }) => {
   await page.goto("/");
 
-  const firstDeleteBtn = page.locator("button[data-id]").first();
-  const id = await firstDeleteBtn.getAttribute("data-id");
+  const firstUser = page.locator("#user-list li").first();
 
-  // handle dialog before click
+  await expect(firstUser).toHaveAttribute("data-id", /\d+/);
+  const id = await firstUser.getAttribute("data-id");
+
   page.once("dialog", (dialog) => dialog.accept());
 
-  await firstDeleteBtn.click();
+  await firstUser.locator("button").click();
 
-  const deletedUser = page.locator(`#user-list li[data-id="${id}"]`);
-  await expect(deletedUser).toHaveCount(0);
+  await expect(page.locator(`#user-list li[data-id="${id}"]`)).toHaveCount(0);
 });
 
 test("5. Show error if backend is down", async ({ page }) => {

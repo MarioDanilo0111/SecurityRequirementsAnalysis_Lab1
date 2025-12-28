@@ -16,7 +16,6 @@ export async function startApp() {
 }
 
 export function renderForm() {
-  console.log("renderForm runinig...");
   const formSection = document.querySelector("#form-section");
   if (!formSection) {
     console.log("Form section not Found");
@@ -87,10 +86,11 @@ export async function renderList() {
   const usersEl = document.querySelector<HTMLUListElement>("#user-list");
   if (!usersEl) return;
 
-  // Clean old items
   usersEl.innerHTML = "";
   // Fetch from Backend
   const users: User[] = await fetchUsers();
+
+  console.log("Users from API: ", users);
 
   users.forEach((u) => {
     const li = document.createElement("li");
@@ -130,7 +130,7 @@ export function setupDeleteEvents() {
 
       try {
         await deleteUserById(btnsId);
-        console.log(`Deleted user with id ${btnsId}`);
+        console.log("Deleted user with id =", btnsId, "element=", b);
         await renderList();
       } catch (err) {
         console.error("Delete failed: ", err);

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/users";
+import { _resetUsers } from "./services/userService";
 
 const app = express();
 const port = 3000;
@@ -29,6 +30,16 @@ app.use(
 
 // Routes
 app.use("/users", userRoutes);
+
+// Test instance
+if (process.env.E2E_RESET === "true") {
+  _resetUsers([
+    { id: 1, name: "Alice", email: "alice@example.com", role: "user" },
+    { id: 2, name: "Bob", email: "bob@example.com", role: "admin" },
+  ]);
+
+  console.log("E2E_RESET: backend user state has been reset.");
+}
 
 app.listen(port, () => {
   console.log(`app on port ${port}`);

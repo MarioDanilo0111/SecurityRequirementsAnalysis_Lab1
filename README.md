@@ -293,7 +293,7 @@ Frontend:
 
 ```bash
 npx playwrigth test
-npx eslint .
+npx run test:e2e
 ```
 
 Backend:
