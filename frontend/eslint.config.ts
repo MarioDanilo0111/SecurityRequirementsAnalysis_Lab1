@@ -4,19 +4,36 @@ import tseslint from "typescript-eslint";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
+  { ignores: ["dist/**", "node_modules/**"] },
+
+  // JavaScript rules
   {
-    files: ["**/*.{ts,js}"],
-    ignores: ["dist/**", "node_modules/**"],
+    files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
-      sourceType: "module",
       globals: {
         ...globals.browser,
+        ...globals.node,
       },
     },
     extends: [js.configs.recommended],
   },
 
+  // TypeScript rules
+  {
+    files: ["**/*.ts"],
+    languageOptions: {
+      parser: tseslint.parser,
+      ecmaVersion: "latest",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+  },
+
+  // Playwright config override
   {
     files: ["playwright.config.ts"],
     languageOptions: {
@@ -25,6 +42,4 @@ export default defineConfig([
       },
     },
   },
-
-  ...tseslint.configs.recommended,
 ]);
