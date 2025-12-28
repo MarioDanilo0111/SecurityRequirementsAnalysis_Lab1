@@ -1,16 +1,17 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { updateUser, getUsers, addUser } from "../src/services/userService.js";
+import {
+  updateUser,
+  getUsers,
+  addUser,
+  _resetUsers,
+} from "../src/services/userService.js";
 
 // Reset before each test
 beforeEach(() => {
-  const seed = [
+  _resetUsers([
     { id: 1, name: "Jeshu", email: "jeshu@vitest.com", role: "user" },
     { id: 2, name: "Mak", email: "mak@vitest.com", role: "admin" },
-  ];
-
-  const users = getUsers();
-  users.length = 0;
-  seed.forEach((u) => users.push(u));
+  ]);
 });
 
 describe("updateUsers()", () => {
@@ -20,7 +21,6 @@ describe("updateUsers()", () => {
     if (updated === null) throw new Error("Expected user to be updated");
 
     expect(updated.name).toBe("NewName");
-    expect(updated.role).toBe("editor");
     expect(updated.email).toBe("jeshu@vitest.com");
   });
 

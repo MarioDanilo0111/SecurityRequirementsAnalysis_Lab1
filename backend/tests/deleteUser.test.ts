@@ -1,14 +1,15 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { deleteUser, getUsers } from "../src/services/userService.js";
+import {
+  deleteUser,
+  getUsers,
+  _resetUsers,
+} from "../src/services/userService.js";
 
 beforeEach(() => {
-  const seed = [
+  _resetUsers([
     { id: 1, name: "George", email: "george@vitest.com", role: "user" },
     { id: 2, name: "John", email: "john@vitest.com", role: "admin" },
-  ];
-  const users = getUsers();
-  users.length = 0;
-  seed.forEach((u) => users.push(u));
+  ]);
 });
 
 describe("deleteUser()", () => {

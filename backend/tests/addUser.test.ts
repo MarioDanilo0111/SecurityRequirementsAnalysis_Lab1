@@ -1,19 +1,14 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { addUser, getUsers } from "../src/services/userService.js";
+import { addUser, getUsers, _resetUsers } from "../src/services/userService.js";
 
 // Restet state before each test (import!)
 beforeEach(() => {
   // Manually reset users array by pushing seed data again
   // (We need to re-import or recreate state each time)
-  const seed = [
+  _resetUsers([
     { id: 1, name: "Carlos", email: "carlos@vitest.com", role: "user" },
     { id: 2, name: "Kath", email: "kath@vitest.com", role: "admin" },
-  ];
-
-  // Deep copy into actual users array
-  const users = getUsers();
-  users.length = 0;
-  seed.forEach((u) => users.push(u));
+  ]);
 });
 
 describe("addUser()", () => {

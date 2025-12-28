@@ -268,6 +268,7 @@ Requirements Checklist
 | API tests                | ✓ Done |
 | Frontend E2E tests       | ✓ Done |
 | CI/CD pipeline           | ✓ Done |
+| ESLint Config            | ✓ Done |
 | Branch protection rules  | ✓ Done |
 | Security analysis        | ✓ Done |
 | README                   | ✓ Done |
@@ -282,6 +283,24 @@ cd SecurityRequirementsAnalysis_Lab1
 nvm use
 npm install
 npm run dev
+```
+
+---
+
+# Test commands
+
+Frontend:
+
+```bash
+npx playwrigth test
+npx eslint .
+```
+
+Backend:
+
+```bash
+npm run test
+npx eslint .
 ```
 
 Backend & frontend start instructions are listed above.

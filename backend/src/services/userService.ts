@@ -7,16 +7,26 @@ const users: User[] = [
 
 /* Get Users */
 export function getUsers(): User[] {
-  return users;
+  return [...users];
 }
 
 /* Add User, POST*/
-export function addUser(name: string, email: string, role: string): User {
+export function addUser(name: string, email: string, role: string) {
+  if (!name || !name.trim()) {
+    throw new Error("Name cannot be empty");
+  }
+
+  // Simple email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    throw new Error("Invalid email format");
+  }
+
   const newUser: User = {
     id: users.length + 1,
-    name,
-    email,
-    role,
+    name: name.trim(),
+    email: email.trim(),
+    role: role.trim(),
   };
   users.push(newUser);
   return newUser;
@@ -37,9 +47,17 @@ export function updateUser(id: number, data: Partial<User>): User | null {
   if (index === -1) return null;
 
   // Prevent ID overrider in PATCH
-  const { id: _, ...safeData } = data;
+  const { id: _ignored, ...updated } = data;
 
-  users[index] = { ...users[index], ...safeData };
+  users[index] = {
+    ...users[index],
+    ...updated,
+  };
 
   return users[index];
+}
+/* To emty the array for testing*/
+export function _resetUsers(newData: User[]) {
+  users.length = 0;
+  newData.forEach((u) => users.push(u));
 }
