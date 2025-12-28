@@ -333,7 +333,3 @@ lsof -ti:3000 -ti:5173 | xargs -r kill -9 2>/dev/null
 Backend & frontend start instructions are listed above.
 
 ---
-
-# CI/CD Status
-
-![CI](https://github.com/MarioDanilo0111/SecurityRequirementsAnalysis_Lab1/actions/workflows/frontend.yml/badge.svg)
