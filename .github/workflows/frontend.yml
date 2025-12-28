@@ -17,14 +17,14 @@ jobs:
         with:
           node-version: "20"
 
-      # Backend install + build (NO start here!)
+      # BACKEND
       - name: Install backend dependencies
         run: npm install --prefix backend
 
       - name: Build backend
         run: npm run build --prefix backend
 
-      # Frontend install + build
+      # FRONTEND
       - name: Install frontend dependencies
         run: npm install --prefix frontend
 
@@ -34,6 +34,12 @@ jobs:
       - name: Lint frontend
         run: npm run lint --prefix frontend
 
-      # Playwright will start both servers automatically
+      # 🔥 NYTT — INSTALLERA PLAYWRIGHT BROWSERS
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+        working-directory: frontend
+
+      # Kör E2E tester
       - name: Run E2E tests
-        run: npm run test:e2e --prefix frontend
+        run: npm run test:e2e
+        working-directory: frontend
