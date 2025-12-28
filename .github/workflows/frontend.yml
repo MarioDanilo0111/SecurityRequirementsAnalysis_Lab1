@@ -17,6 +17,21 @@ jobs:
         with:
           node-version: "20"
 
+      # Backend installation + build
+      - name: Install backend dependencies
+        run: npm install --prefix backend
+
+      - name: Build backend
+        run: npm run build --prefix backend
+
+      # Start backend for E2E tests
+      - name: Start backend server
+        run: npm start --prefix backend &
+
+      - name: Wait for backend
+        run: sleep 3
+
+      # Frontend installation + build
       - name: Install frontend dependencies
         run: npm install --prefix frontend
 
@@ -26,13 +41,13 @@ jobs:
       - name: Lint frontend
         run: npm run lint --prefix frontend
 
-      # Start preview server
+      # Start frontend preview server
       - name: Start frontend preview server
         run: npm run preview --prefix frontend &
 
-      # Wait for preview server to start
-      - name: Wait for server
+      - name: Wait for frontend
         run: sleep 3
 
+      # Run Playwright tests
       - name: Run E2E tests
         run: npm run test:e2e --prefix frontend
