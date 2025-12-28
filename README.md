@@ -292,17 +292,48 @@ npm run dev
 Frontend:
 
 ```bash
-npx playwrigth test
-npx run test:e2e
+nvm use
+npm run kill-ports
+npm run dev
+
+cd /frontend
+npm run test:e2e --prefix frontend
+
+npm run lint
 ```
 
 Backend:
 
 ```bash
+cd /backend
 npm run test
 npx eslint .
+```
+
+How to Kill all Ports:
+
+for Port 3000 and 5173
+
+```bash
+lsof -ti:3000 -ti:5173 | xargs -r kill -9
+```
+
+Kill a specific port
+
+```bash
+kill -9 $(lsof -ti) 2>/dev/null
+```
+
+Best variant:
+
+```bash
+lsof -ti:3000 -ti:5173 | xargs -r kill -9 2>/dev/null
 ```
 
 Backend & frontend start instructions are listed above.
 
 ---
+
+# CI/CD Status
+
+![CI](https://github.com/MarioDanilo0111/SecurityRequirementsAnalysis_Lab1/actions/workflows/frontend.yml/badge.svg)
