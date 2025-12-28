@@ -1,0 +1,22 @@
+{
+  "name": "securityrequirementsanalysis_lab1-root",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root workspace for running frontend + backend concurrently.",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "predev": "npm run kill-ports",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "kill-ports": "lsof -ti:3000 -ti:5173 | xargs -r kill -9 2>/dev/null || true",
+    "lint": "eslint backend/src frontend/src --ext .ts,.js"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

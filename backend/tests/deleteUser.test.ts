@@ -1,0 +1,47 @@
+import { describe, it, expect, beforeEach } from "vitest";
+import {
+  deleteUser,
+  getUsers,
+  _resetUsers,
+} from "../src/services/userService.js";
+
+beforeEach(() => {
+  _resetUsers([
+    { id: 1, name: "George", email: "george@vitest.com", role: "user" },
+    { id: 2, name: "John", email: "john@vitest.com", role: "admin" },
+  ]);
+});
+
+describe("deleteUser()", () => {
+  it("delete a user by id and return the deleted user", () => {
+    const deleted = deleteUser(1);
+
+    if (deleted !== false) {
+      expect(deleted.id).toBe(1);
+    } else {
+      throw new Error("Expected delete to be return a user, but got falese");
+    }
+
+    expect(deleted).toBeDefined();
+    expect(getUsers().length).toBe(1);
+  });
+
+  it("returns false if user does not exist", () => {
+    const response = deleteUser(999);
+    expect(response).toBe(false);
+  });
+
+  it("removes exactly one user", () => {
+    const before = getUsers().length;
+    deleteUser(2);
+    const after = getUsers().length;
+
+    expect(after).toBe(before - 1);
+  });
+
+  it("should return false for invalid numeric ID's", () => {
+    expect(deleteUser(-1)).toBe(false);
+    expect(deleteUser(0)).toBe(false);
+    expect(deleteUser(NaN)).toBe(false);
+  });
+});
