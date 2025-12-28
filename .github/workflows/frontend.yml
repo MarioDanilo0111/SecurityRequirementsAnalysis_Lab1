@@ -23,7 +23,7 @@ jobs:
         run: npm run build --prefix frontend
 
       - name: Lint frontend
-        run: npm run lint --prefix frontend
+        run: npx eslint frontend/src --ext .ts, .js
 
       - name: Run E2E tests
         run: npm run test:e2e --prefix frontend
