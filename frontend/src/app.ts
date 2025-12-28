@@ -125,7 +125,9 @@ export function setupDeleteEvents() {
         return;
       }
 
-      if (!confirm("Are you sure you want to delete this user?")) return;
+      const ok = confirm("Are you sure you want to delete this user?");
+      if (!ok) return;
+
       try {
         await deleteUserById(btnsId);
         console.log(`Deleted user with id ${btnsId}`);
