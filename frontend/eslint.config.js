@@ -6,24 +6,10 @@ import { defineConfig } from "eslint/config";
 export default defineConfig([
   { ignores: ["dist/**", "node_modules/**"] },
 
-  // JavaScript rules
+  // JavaScript / TypeScript rules
   {
-    files: ["**/*.js"],
+    files: ["src/**/*.{ts,js}"],
     languageOptions: {
-      ecmaVersion: "latest",
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
-    extends: [js.configs.recommended],
-  },
-
-  // TypeScript rules
-  {
-    files: ["**/*.ts"],
-    languageOptions: {
-      parser: tseslint.parser,
       ecmaVersion: "latest",
       globals: {
         ...globals.browser,
